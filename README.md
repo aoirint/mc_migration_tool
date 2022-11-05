@@ -1,5 +1,7 @@
 # mc_migration_tool
 
+Unofficial Minecraft migration tool from Bedrock edition to Java edition.
+
 ## Notice
 
 Depends on non-commercial purpose only libraries.
@@ -22,6 +24,7 @@ python3 main.py extract_player_server_keys "/path/to/world/db"
 python3 main.py players_ender_chest "/path/to/world/db"
 ```
 
+- Bedrock level format reference: <https://minecraft.fandom.com/wiki/Bedrock_Edition_level_format>
 
 ## Add dependency
 
