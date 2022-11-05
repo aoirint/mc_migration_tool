@@ -4,6 +4,27 @@ from amulet_nbt import utf8_escape_decoder
 from pathlib import Path
 
 
+def extract_keys(args):
+  db_path = args.db_path
+  output_path = Path(args.output_path)
+
+  if output_path.exists():
+    raise Exception('File exists')
+
+  db = LevelDB(db_path)
+  keys = list(db.keys())
+
+  # FIXME: UnicodeDecodeError
+  key_str_list = list(map(lambda key: key.decode('utf-8'), keys))
+
+  keys_text = '\n'.join(key_str_list) + '\n'
+
+  if output_path.exists():
+    raise Exception('File exists')
+
+  output_path.write_text(keys_text, encoding='utf-8')
+
+
 def extract_player_server_keys(args):
   db_path = args.db_path
   output_path = Path(args.output_path)
@@ -50,6 +71,11 @@ def main():
   import argparse
   parser = argparse.ArgumentParser()
   subparsers = parser.add_subparsers()
+  subparser_extract_keys = subparsers.add_parser('extract_keys')
+  subparser_extract_keys.add_argument('db_path', type=str)
+  subparser_extract_keys.add_argument('-o', '--output_path', type=str, default='keys.txt')
+  subparser_extract_keys.set_defaults(handler=extract_keys)
+
   subparser_extract_player_server_keys = subparsers.add_parser('extract_player_server_keys')
   subparser_extract_player_server_keys.add_argument('db_path', type=str)
   subparser_extract_player_server_keys.add_argument('-o', '--output_path', type=str, default='player_server_keys.txt')
