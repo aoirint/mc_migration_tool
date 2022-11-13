@@ -2,3 +2,10 @@
 
 このプログラムのソースコードはMIT Licenseでの利用を許諾しますが、
 依存ライブラリのライセンスに注意して利用するようにしてください。
+
+---
+
+This program has dependencies released under non-free licenses which may prohibit some commercial usages.
+
+The source code of this program is released under MIT License,
+but you should be careful of the licenses of its dependencies.
