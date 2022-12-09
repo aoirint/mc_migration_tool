@@ -24,7 +24,7 @@ def __load_tags(list_tag: amulet_nbt._list.ListTag) -> list[str]:
   return [ str(string_tag) for string_tag in list_tag ]
 
 
-def load_villager(compound: amulet_nbt._compound.CompoundTag) -> BedrockOffers:
+def load_villager(compound: amulet_nbt._compound.CompoundTag) -> BedrockVillager:
   return BedrockVillager(
     offers=load_offers(compound.get_compound('Offers')) if 'Offers' in compound else None,
     pos=load_pos(compound.get_list('Pos')),
