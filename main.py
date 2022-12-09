@@ -70,14 +70,8 @@ def print_villagers(args):
     if identifier != 'minecraft:villager_v2':
       continue
 
-    offers = mc_migration_tool.bedrock.load_offers(compound.get_compound('Offers')) if 'Offers' in compound else None
-    if offers is None:
-      continue
-
-    pos = mc_migration_tool.bedrock.load_pos(compound.get_list('Pos'))
-
-    print(pos)
-    print(offers)
+    villager = mc_migration_tool.bedrock.load_villager(compound)
+    print(villager)
 
 
 def main():
