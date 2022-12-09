@@ -71,7 +71,57 @@ def print_villagers(args):
       continue
 
     villager = mc_migration_tool.bedrock.load_villager(compound)
+
+    root = amulet_nbt._compound.CompoundTag()
+
+    villager_data = amulet_nbt._compound.CompoundTag()
+
+    # : Types
+    # plains
+    # taiga
+    # savanna
+    # jungle
+    # desert
+    # snow
+    # swamp
+    villager_data['type'] = amulet_nbt._string.StringTag('plains')
+
+    # : Profession
+    # (undefined)
+    # farmer
+    # fisherman
+    # shepherd
+    # fletcher
+    # librarian
+    # cartographer
+    # cleric
+    # armorer
+    # weaponsmith
+    # toolsmith
+    # butcher
+    # leatherworker
+    # mason
+    # nitwit
+    villager_data['profession'] = amulet_nbt._string.StringTag('farmer')
+
+    # : Level
+    # 1
+    # 2 (spawn with profession)
+    # 3
+    # 4
+    # 5 (highest)
+    villager_data['level'] = amulet_nbt._int.IntTag(2)
+    root['VillagerData'] = villager_data
+
     print(villager)
+    print(' '.join([
+      '/summon',
+      'villager',
+      f'{villager.pos.x:.0f}',
+      f'{villager.pos.y:.0f}',
+      f'{villager.pos.z:.0f}',
+      root.to_snbt(),
+    ]))
 
 
 def main():
