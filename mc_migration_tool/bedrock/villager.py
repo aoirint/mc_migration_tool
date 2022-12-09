@@ -19,6 +19,7 @@ class BedrockVillager:
   trade_experience: int
   trade_table_path: Optional[str]
 
+
 def __load_tags(list_tag: amulet_nbt._list.ListTag) -> list[str]:
   return [ str(string_tag) for string_tag in list_tag ]
 
