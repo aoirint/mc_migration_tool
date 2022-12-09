@@ -1,2 +1,4 @@
 /player_server_keys.txt
 /venv
+
+__pycache__/

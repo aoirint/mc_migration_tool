@@ -1,7 +1,11 @@
 from leveldb import LevelDB
 import amulet_nbt
 from amulet_nbt import utf8_escape_decoder
+from mutf8 import encode_modified_utf8
 from pathlib import Path
+from dataclasses import dataclass
+from typing import Optional
+import mc_migration_tool
 
 
 def extract_player_server_keys(args):
@@ -46,6 +50,39 @@ def print_players_ender_chest(args):
       print(line)
 
 
+def print_villagers(args):
+  db_path = args.db_path
+
+  db = LevelDB(db_path)
+  for key in db.keys():
+    try:
+      nbt = amulet_nbt.load(db.get(key), compressed=False, little_endian=True, string_decoder=utf8_escape_decoder)
+    except:
+      continue
+
+    # TAG_Compound: 10
+    if nbt.tag.tag_id != 10:
+      continue
+
+    compound = nbt.compound
+
+    if 'identifier' not in compound:
+      continue
+
+    identifier = compound.get_string('identifier')
+    if str(identifier) != 'minecraft:villager_v2':
+      continue
+
+    if 'Offers' not in compound:
+      continue
+
+    offers = mc_migration_tool.bedrock.load_offers(compound.get_compound('Offers'))
+    pos = mc_migration_tool.bedrock.load_pos(compound.get_list('Pos'))
+
+    print(pos)
+    print(offers)
+
+
 def main():
   import argparse
   parser = argparse.ArgumentParser()
@@ -59,6 +96,10 @@ def main():
   subparser_players_ender_chest.add_argument('db_path', type=str)
   subparser_players_ender_chest.add_argument('-i', '--input_path', type=str, default='player_server_keys.txt')
   subparser_players_ender_chest.set_defaults(handler=print_players_ender_chest)
+
+  subparser_villagers = subparsers.add_parser('villagers')
+  subparser_villagers.add_argument('db_path', type=str)
+  subparser_villagers.set_defaults(handler=print_villagers)
 
   args = parser.parse_args()
   if hasattr(args, 'handler'):
