@@ -1,3 +1,4 @@
+import sys
 from leveldb import LevelDB
 import amulet_nbt
 from amulet_nbt import utf8_escape_decoder
@@ -136,6 +137,7 @@ def print_villagers(args):
     for _recipe in villager.offers.recipes:
       recipe = amulet_nbt._compound.CompoundTag()
 
+      # TODO: Enchantment support
       buy = amulet_nbt._compound.CompoundTag()
       buy['id'] = amulet_nbt._string.StringTag(_recipe.buy_a.name)
       buy['Count'] = amulet_nbt._int.IntTag(_recipe.buy_a.count)
@@ -158,7 +160,7 @@ def print_villagers(args):
 
     root['VillagerData'] = villager_data
 
-    print(villager)
+    print(villager, file=sys.stderr)
     print(' '.join([
       '/summon',
       'villager',
