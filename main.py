@@ -127,6 +127,9 @@ def print_villagers(args):
       raise Exception(f'Unknown Villager TradeTier: {bedrock_villager_trade_tier}')
     villager_data['level'] = amulet_nbt._int.IntTag(java_villager_level_ints[bedrock_villager_trade_tier])
 
+    if villager.offers is None:
+      continue
+
     # TODO: item id mappings
     offers = amulet_nbt._compound.CompoundTag()
     recipes = amulet_nbt._list.ListTag()
