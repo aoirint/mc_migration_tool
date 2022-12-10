@@ -126,6 +126,33 @@ def print_villagers(args):
     if len(java_villager_level_ints) <= bedrock_villager_trade_tier:
       raise Exception(f'Unknown Villager TradeTier: {bedrock_villager_trade_tier}')
     villager_data['level'] = amulet_nbt._int.IntTag(java_villager_level_ints[bedrock_villager_trade_tier])
+
+    # TODO: item id mappings
+    offers = amulet_nbt._compound.CompoundTag()
+    recipes = amulet_nbt._list.ListTag()
+    for _recipe in villager.offers.recipes:
+      recipe = amulet_nbt._compound.CompoundTag()
+
+      buy = amulet_nbt._compound.CompoundTag()
+      buy['id'] = amulet_nbt._string.StringTag(_recipe.buy_a.name)
+      buy['Count'] = amulet_nbt._int.IntTag(_recipe.buy_a.count)
+      buy['Damage'] = amulet_nbt._int.IntTag(_recipe.buy_a.damage)
+      recipe['buy'] = buy
+
+      sell = amulet_nbt._compound.CompoundTag()
+      sell['id'] = amulet_nbt._string.StringTag(_recipe.sell.name)
+      sell['Count'] = amulet_nbt._int.IntTag(_recipe.sell.count)
+      sell['Damage'] = amulet_nbt._int.IntTag(_recipe.sell.damage)
+      recipe['sell'] = sell
+
+      recipe['rewardExp'] = amulet_nbt._int.ByteTag(_recipe.reward_exp)
+      recipe['maxUses'] = amulet_nbt._int.IntTag(_recipe.max_uses)
+      recipes.append(recipe)
+
+    offers['Recipes'] = recipes
+
+    villager_data['Offers'] = offers
+
     root['VillagerData'] = villager_data
 
     print(villager)
