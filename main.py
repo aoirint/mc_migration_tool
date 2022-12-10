@@ -77,40 +77,55 @@ def print_villagers(args):
     villager_data = amulet_nbt._compound.CompoundTag()
 
     # : Types
-    # plains
-    # taiga
-    # savanna
-    # jungle
-    # desert
-    # snow
-    # swamp
-    villager_data['type'] = amulet_nbt._string.StringTag('plains')
+    java_villager_type_strings = [
+      'plains',
+      'desert',
+      'jungle',
+      'savanna',
+      'snow',
+      'swamp',
+      'taiga',
+    ]
+    bedrock_villager_mark_variant = villager.mark_variant
+    if len(java_villager_type_strings) <= bedrock_villager_mark_variant:
+      raise Exception(f'Unknown Villager MarkVariant: {bedrock_villager_mark_variant}')
+    villager_data['type'] = amulet_nbt._string.StringTag(java_villager_type_strings[bedrock_villager_mark_variant])
 
     # : Profession
-    # (undefined)
-    # farmer
-    # fisherman
-    # shepherd
-    # fletcher
-    # librarian
-    # cartographer
-    # cleric
-    # armorer
-    # weaponsmith
-    # toolsmith
-    # butcher
-    # leatherworker
-    # mason
-    # nitwit
-    villager_data['profession'] = amulet_nbt._string.StringTag('farmer')
+    java_villager_profession_strings = [
+      None,
+      'farmer',
+      'fisherman',
+      'shepherd',
+      'fletcher',
+      'librarian',
+      'cartographer',
+      'cleric',
+      'armorer',
+      'weaponsmith',
+      'toolsmith',
+      'butcher',
+      'leatherworker',
+      'mason',
+      'nitwit',
+    ]
+    bedrock_villager_preferred_profession = villager.preferred_profession
+    if bedrock_villager_preferred_profession not in java_villager_profession_strings:
+      raise Exception(f'Unknown Villager PreferredProfession: {bedrock_villager_preferred_profession}')
+    villager_data['profession'] = amulet_nbt._string.StringTag(bedrock_villager_preferred_profession)
 
-    # : Level
-    # 1
-    # 2 (spawn with profession)
-    # 3
-    # 4
-    # 5 (highest)
-    villager_data['level'] = amulet_nbt._int.IntTag(2)
+    # : Tier -> Level
+    java_villager_level_ints = [
+      1, # 0
+      2, # 1 (spawn with profession)
+      3, # 2
+      4, # 3
+      5, # 4 (highest)
+    ]
+    bedrock_villager_trade_tier = villager.trade_tier
+    if len(java_villager_level_ints) <= bedrock_villager_trade_tier:
+      raise Exception(f'Unknown Villager TradeTier: {bedrock_villager_trade_tier}')
+    villager_data['level'] = amulet_nbt._int.IntTag(java_villager_level_ints[bedrock_villager_trade_tier])
     root['VillagerData'] = villager_data
 
     print(villager)
