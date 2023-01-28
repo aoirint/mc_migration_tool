@@ -4,11 +4,21 @@ from typing import Optional
 
 
 @dataclass
+class BedrockRecipeItemTagEnchItem:
+  id: int
+  lvl: int
+
+@dataclass
+class BedrockRecipeItemTag:
+  ench: Optional[list[BedrockRecipeItemTagEnchItem]]
+
+@dataclass
 class BedrockRecipeItem:
   count: int
   damage: int
   name: str
   was_picked_up: int
+  tag: Optional[BedrockRecipeItemTag]
 
 
 @dataclass
@@ -37,12 +47,37 @@ class BedrockOffers:
 BedrockTierExpRequirement = dict[str, int]
 
 
+def __load_recipe_item_tag_ench_item(compound: amulet_nbt._compound.CompoundTag) -> BedrockRecipeItemTagEnchItem:
+  return BedrockRecipeItemTagEnchItem(
+    id=compound.get_short('id'),
+    lvl=compound.get_short('lvl'),
+  )
+
+def __load_recipe_item_tag(compound: amulet_nbt._compound.CompoundTag) -> BedrockRecipeItemTag:
+  ench_list = compound.get_list('ench') if 'ench' in compound else None
+  ench_items = None
+  if ench_list is not None:
+    ench_items = []
+
+    for ench_index in range(len(ench_list)):
+      ench_item_compound = ench_list.get_compound(ench_index)
+      ench_item = __load_recipe_item_tag_ench_item(ench_item_compound)
+      ench_items.append(ench_item)
+  
+  return BedrockRecipeItemTag(
+    ench=ench_items,
+  )
+
 def __load_recipe_item(compound: amulet_nbt._compound.CompoundTag) -> BedrockRecipeItem:
+  tag_compound = compound.get_compound('tag') if 'tag' in compound else None
+  tag = __load_recipe_item_tag(tag_compound) if tag_compound is not None else None
+
   return BedrockRecipeItem(
     count=int(compound.get_byte('Count')),
     damage=int(compound.get_short('Damage')),
     name=str(compound.get_string('Name')),
     was_picked_up=int(compound.get_byte('WasPickedUp')),
+    tag=tag,
   )
 
 
