@@ -156,9 +156,8 @@ def print_villagers(args):
 
     offers['Recipes'] = recipes
 
-    villager_data['Offers'] = offers
-
     root['VillagerData'] = villager_data
+    root['Offers'] = offers
 
     print(villager, file=sys.stderr)
     print(' '.join([
