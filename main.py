@@ -138,17 +138,16 @@ def print_villagers(args):
       recipe = amulet_nbt._compound.CompoundTag()
 
       # TODO: Enchantment support
-      buy = amulet_nbt._compound.CompoundTag()
-      buy['id'] = amulet_nbt._string.StringTag(_recipe.buy_a.name)
-      buy['Count'] = amulet_nbt._int.IntTag(_recipe.buy_a.count)
-      buy['Damage'] = amulet_nbt._int.IntTag(_recipe.buy_a.damage)
-      recipe['buy'] = buy
+      def convert_recipe_item(bedrock_item: mc_migration_tool.bedrock.offers.BedrockRecipeItem) -> amulet_nbt._compound.CompoundTag:
+        item = amulet_nbt._compound.CompoundTag()
+        item['id'] = amulet_nbt._string.StringTag(bedrock_item.name)
+        item['Count'] = amulet_nbt._int.IntTag(bedrock_item.count)
+        item['Damage'] = amulet_nbt._int.IntTag(bedrock_item.damage)
 
-      sell = amulet_nbt._compound.CompoundTag()
-      sell['id'] = amulet_nbt._string.StringTag(_recipe.sell.name)
-      sell['Count'] = amulet_nbt._int.IntTag(_recipe.sell.count)
-      sell['Damage'] = amulet_nbt._int.IntTag(_recipe.sell.damage)
-      recipe['sell'] = sell
+        return item
+
+      recipe['buy'] = convert_recipe_item(_recipe.buy_a)
+      recipe['sell'] = convert_recipe_item(_recipe.sell)
 
       recipe['rewardExp'] = amulet_nbt._int.ByteTag(_recipe.reward_exp)
       recipe['maxUses'] = amulet_nbt._int.IntTag(_recipe.max_uses)
