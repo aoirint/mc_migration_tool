@@ -49,8 +49,8 @@ BedrockTierExpRequirement = dict[str, int]
 
 def __load_recipe_item_tag_ench_item(compound: amulet_nbt._compound.CompoundTag) -> BedrockRecipeItemTagEnchItem:
   return BedrockRecipeItemTagEnchItem(
-    id=compound.get_short('id'),
-    lvl=compound.get_short('lvl'),
+    id=int(compound.get_short('id')),
+    lvl=int(compound.get_short('lvl')),
   )
 
 def __load_recipe_item_tag(compound: amulet_nbt._compound.CompoundTag) -> BedrockRecipeItemTag:

@@ -137,12 +137,63 @@ def print_villagers(args):
     for _recipe in villager.offers.recipes:
       recipe = amulet_nbt._compound.CompoundTag()
 
-      # TODO: Enchantment support
+      java_enchantment_id_strs = {
+        0: 'minecraft:protection',
+        1: 'minecraft:fire_protection',
+        2: 'minecraft:feather_falling',
+        3: 'minecraft:blast_protection',
+        4: 'minecraft:projectile_protection',
+        5: 'minecraft:thorns',
+        6: 'minecraft:respiration',
+        7: 'minecraft:depth_strider',
+        8: 'minecraft:aqua_affinity',
+        9: 'minecraft:sharpness',
+        10: 'minecraft:smite',
+        11: 'minecraft:bane_of_arthropods',
+        12: 'minecraft:knockback',
+        13: 'minecraft:fire_aspect',
+        14: 'minecraft:looting',
+        15: 'minecraft:efficiency',
+        16: 'minecraft:silk_touch',
+        17: 'minecraft:unbreaking',
+        18: 'minecraft:fortune',
+        19: 'minecraft:power',
+        20: 'minecraft:punch',
+        21: 'minecraft:flame',
+        22: 'minecraft:infinity',
+        23: 'minecraft:luck_of_the_sea',
+        24: 'minecraft:lure',
+        25: 'minecraft:frost_walker',
+        26: 'minecraft:mending',
+        27: 'minecraft:binding_curse',
+        28: 'minecraft:vanishing_curse',
+        29: 'minecraft:impaling',
+        30: 'minecraft:riptide',
+        31: 'minecraft:loyalty',
+        32: 'minecraft:channeling',
+        33: 'minecraft:multishot',
+        34: 'minecraft:piercing',
+        35: 'minecraft:quick_charge',
+        36: 'minecraft:soul_speed',
+      }
+
       def convert_recipe_item(bedrock_item: mc_migration_tool.bedrock.offers.BedrockRecipeItem) -> amulet_nbt._compound.CompoundTag:
         item = amulet_nbt._compound.CompoundTag()
         item['id'] = amulet_nbt._string.StringTag(bedrock_item.name)
         item['Count'] = amulet_nbt._int.IntTag(bedrock_item.count)
         item['Damage'] = amulet_nbt._int.IntTag(bedrock_item.damage)
+
+        if bedrock_item.tag is not None:
+          tag = amulet_nbt._compound.CompoundTag()
+          if bedrock_item.tag.ench is not None:
+            stored_enchantments = amulet_nbt._list.ListTag()
+            for bedrock_ench in bedrock_item.tag.ench:
+              ench = amulet_nbt._compound.CompoundTag()
+              ench['id'] = amulet_nbt._string.StringTag(java_enchantment_id_strs[bedrock_ench.id])
+              ench['lvl'] = amulet_nbt._int.ShortTag(bedrock_ench.lvl)
+              stored_enchantments.append(ench)
+            tag['StoredEnchantments'] = stored_enchantments
+          item['tag'] = tag
 
         return item
 
